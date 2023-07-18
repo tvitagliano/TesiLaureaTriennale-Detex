@@ -1,7 +1,8 @@
 # TesiLaureaTriennale-Detex
 
-“Detecting Code Smells in Python Codebases: Implementation of the DECOR Technique”
-
+“UN TOOL BASATO SU DECOR PER L'INDIVIDUAZIONE DI CODE SMELL IN SISTEMI PYTHON”
 Questo studio presenta l'implementazione della tecnica DECOR per la rilevazione di code smell in codebase Python. L'obiettivo principale è di sviluppare un metodo automatizzato per rilevare i code smell in basi di codice Python, concentrandosi sui design smell: Long Method, Blob, Lazy Class e Spaghetti Code.
-
 La metodologia utilizzata in questo lavoro è basata sulla tecnica DECOR (Detection of Code smells by Exploring Relations), che combina l'analisi statica del codice con l'esplorazione delle relazioni tra le classi e i metodi all'interno del codice Python. L'implementazione della tecnica DECOR è stata sviluppata utilizzando il linguaggio di programmazione Python e la relativa libreria pydantic.
+I risultati ottenuti mediante l'applicazione della tecnica DECOR su una serie di progetti Python dimostrano l'efficacia del sistema nella rilevazione accurata e tempestiva dei code smell. I risultati delle valutazioni quantitative e qualitative dei design smell individuati offrono una visione approfondita delle aree problematiche nelle codebase Python analizzate.
+L'importanza di questa ricerca risiede nella possibilità di migliorare la qualità del codice Python, facilitando la manutenzione, il refactoring e la comprensione dei progetti software. I risultati ottenuti possono essere utili per gli sviluppatori, i project manager e gli analisti del software nella prevenzione e nel miglioramento della qualità del codice sorgente Python.
+Questo studio contribuisce al campo delle best practices nello sviluppo software e fornisce un'implementazione pratica ed efficace per la rilevazione dei code smell nei progetti Python, promuovendo una progettazione e una manutenzione più efficienti dei software basati su questo linguaggio di programmazione.
