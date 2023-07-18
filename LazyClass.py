@@ -1,30 +1,21 @@
-import string
-from pydantic import BaseModel
-from typing import List
+def lazy_class_threshold(min_methods):
+    def decorator(cls):
+        if len(cls.__dict__) <= min_methods:
+            print(f"Avviso: La classe '{cls.__name__}' è considerata una 'lazy class' con un numero insufficiente di metodi.")
+        return cls
+    return decorator
 
-class Employee(BaseModel):
-    name: str
-    role: str
 
-class Team:
-    def __init__(self, name: str):
-        self.name = name
-        self.members: List[Employee] = []  # Aggiunta dell'annotazione del tipo corretta
+#@lazy_class_threshold(min_methods=3)
+#class MyClass:
+    def method1(self):
+        pass
 
-    def add_member(self, employee: Employee):
-        self.members.append(employee)
+    def method2(self):
+        pass
 
-    def list_members(self):
-        print(f"Team: {self.name}")
-        for member in self.members:
-            print(f"- {member.name} ({member.role})")
+    def method3(self):
+        pass
 
-# Utilizzo della classe Team
-team = Team("Team A")
-
-employee1 = Employee(name="Alice", role="Developer")
-employee2 = Employee(name="Bob", role="Designer")
-team.add_member(employee1)
-team.add_member(employee2)
-
-team.list_members()
+    def method4(self):
+        pass
