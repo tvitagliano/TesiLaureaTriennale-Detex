@@ -1,5 +1,5 @@
 import inspect
-
+#conteggio delle line utilizzat
 
 def long_method_threshold(max_length):
     def decorator(func):
@@ -13,6 +13,3 @@ def long_method_threshold(max_length):
         return wrapper
     return decorator
 
-#@long_method_threshold(max_length=20)
-#def my_function():
-   #Codice della funzione
