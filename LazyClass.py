@@ -5,17 +5,15 @@ def lazy_class_threshold(min_methods):
         return cls
     return decorator
 
+#controlla, tramite una soglia, quanti metodi ha una classe
+#ritorna un worning-avviso
 
-#@lazy_class_threshold(min_methods=3)
-#class MyClass:
-    def method1(self):
-        pass
+def lazy_class_threshold_2(min_methods):
+    def decorator(cls):
+        if len(cls.__dict__) <= min_methods:
+            generate_warning("La classe '{}' è considerata una 'lazy class' con un numero insufficiente di metodi.".format(cls.__name__))
+        return cls
+    return decorator
 
-    def method2(self):
-        pass
-
-    def method3(self):
-        pass
-
-    def method4(self):
-        pass
+def generate_warning(message):
+    print("Avviso:", message)

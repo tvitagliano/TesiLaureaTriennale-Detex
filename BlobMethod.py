@@ -1,6 +1,7 @@
 import inspect
 
 
+#controllo delle linee di un metodo
 def blob_method_threshold(max_lines):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -14,7 +15,7 @@ def blob_method_threshold(max_lines):
     return decorator
 
 
-#class MyClass:
+class MyClass:
     @blob_method_threshold(max_lines=50)
     def my_method(self):
         # Lungo blocco di codice che può superare la soglia consentita di 50 linee
