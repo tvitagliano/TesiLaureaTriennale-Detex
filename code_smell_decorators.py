@@ -1,8 +1,10 @@
 import inspect
+import difflib
 from radon.complexity import cc_visit
 #from code_smell_decorators import long_method_threshold, lazy_class_threshold, blob_method_threshold, spaghetti_code_threshold
 
 
+#complessità, grandezza
 def blob_method_threshold(max_lines):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -10,11 +12,12 @@ def blob_method_threshold(max_lines):
             source_lines = inspect.getsource(func).split('\n')
             method_length = len(source_lines)
             if method_length > max_lines:
-                print(f"Avviso: Il metodo '{method_name}' supera la soglia di linee di codice consentita.")
+                return "avviso"
             return func(*args, **kwargs)
         return wrapper
     return decorator
 
+#lunghezza di un metodo 
 def long_method_threshold(max_length):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -22,12 +25,12 @@ def long_method_threshold(max_length):
             source_lines = inspect.getsource(func).split('\n')
             method_length = len(source_lines)
             if method_length > max_length:
-                print(f"Avviso: Il metodo '{method_name}' supera la soglia di lunghezza massima consentita.")
+                return "avviso"
             return func(*args, **kwargs)
         return wrapper
     return decorator
 
-
+#numero di metodi all'interno di una classe
 def lazy_class_threshold(min_methods):
     def decorator(cls):
         if len(cls.__dict__) <= min_methods:
@@ -35,6 +38,7 @@ def lazy_class_threshold(min_methods):
         return cls
     return decorator
 
+#calcolo della complessità ciclomatica
 def spaghetti_code_threshold(max_complexity):
     def decorator(func):
         def wrapper(*args, **kwargs):
@@ -46,3 +50,38 @@ def spaghetti_code_threshold(max_complexity):
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+#identificazione di duplicati 
+#Viene utilizzata la libreria difflib per confrontare le linee di codice e calcolare la loro similarità.
+#Se la similarità supera una soglia specificata, verrà generato un avviso indicando che il metodo contiene codice duplicato, insieme alle linee duplicate individuate.
+
+def spaghetti_code_duplicato_threshold(max_similarity):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            source_code = inspect.getsource(func)
+            lines = source_code.split('\n')
+            duplicated_lines = find_duplicated_lines(lines, max_similarity)
+            
+            if duplicated_lines:
+                generate_warning("Il metodo '{}' contiene codice duplicato.".format(func.__name__))
+                print("Linee duplicati:")
+                for line in duplicated_lines:
+                    print(line)
+                    
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator
+
+def find_duplicated_lines(lines, max_similarity):
+    duplicated_lines = []
+    for i, line in enumerate(lines):
+        for j in range(i + 1, len(lines)):
+            similarity = difflib.SequenceMatcher(None, line, lines[j]).ratio()
+            if similarity >= max_similarity:
+                duplicated_lines.append("Linea {}: '{}'".format(i + 1, line))
+                duplicated_lines.append("Linea {}: '{}'".format(j + 1, lines[j]))
+    return duplicated_lines
+
+def generate_warning(message):
+    print("Avviso:", message)
