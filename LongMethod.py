@@ -1,6 +1,6 @@
 import inspect
 #conteggio delle line utilizzat
-MAX_STATEMENTS_THRESHOLD=20
+MAX_STATEMENTS_THRESHOLD=5
 
 
 def long_method_threshold(max_length):

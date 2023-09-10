@@ -15,8 +15,3 @@ def blob_method_threshold(max_lines):
     return decorator
 
 
-class MyClass:
-    @blob_method_threshold(max_lines=50)
-    def my_method(self):
-        # Lungo blocco di codice che può superare la soglia consentita di 50 linee
-        pass

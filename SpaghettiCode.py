@@ -1,34 +1,30 @@
 import inspect
 import difflib
+import ast
 from radon.complexity import cc_visit
+MAX_COMPLEXITY=5
 
-def spaghetti_code_threshold(max_complexity):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            method_name = func.__name__
-            source_code = inspect.getsource(func)
-            complexity = cc_visit(source_code)[0].complexity
-            if complexity > max_complexity:
-                print(f"Avviso: Il metodo '{method_name}' presenta un livello di complessità ciclomatica superiore alla soglia consentita.")
-            return func(*args, **kwargs)
-        return wrapper
-    return decorator
+#complessità
+def spaghetti_code(node):
+    method_complexity = calculate_complexity(node)  # Sostituisci questa funzione con il calcolo di complessità reale
+            
+    # Definisci il criterio per un metodo complesso
+    if method_complexity > MAX_COMPLEXITY:
+        return True  # Metodo considerato troppo complesso
+    else:
+        return False  # Metodo considerato accettabile
 
-#complessità ciclomatica
-def spaghetti_code_threshold_2(max_complexity):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            method_name = func.__name__
-            source_code = inspect.getsource(func)
-            complexity = cc_visit(source_code)[0].complexity
-            if complexity > max_complexity:
-                generate_warning("Il metodo '{}' ha una complessità ciclomatica superiore alla soglia consentita.".format(method_name))
-            return func(*args, **kwargs)
-        return wrapper
-    return decorator
 
-def generate_warning(message): # type: ignore
-    print("Avviso:", message)
+def calculate_complexity(node):
+    complexity = 0
+    for child_node in ast.walk(node):
+        if isinstance(child_node, (ast.If, ast.While, ast.For)):
+            complexity += 1
+    
+    return complexity
+
+
+
 
 #identificazione di duplicati 
 #Viene utilizzata la libreria difflib per confrontare le linee di codice e calcolare la loro similarità.
@@ -41,7 +37,7 @@ def spaghetti_code_duplicato_threshold(max_similarity):
             duplicated_lines = find_duplicated_lines(lines, max_similarity)
             
             if duplicated_lines:
-                generate_warning("Il metodo '{}' contiene codice duplicato.".format(func.__name__))
+                #generate_warning("Il metodo '{}' contiene codice duplicato.".format(func.__name__))
                 print("Linee duplicati:")
                 for line in duplicated_lines:
                     print(line)
@@ -59,10 +55,5 @@ def find_duplicated_lines(lines, max_similarity):
                 duplicated_lines.append("Linea {}: '{}'".format(i + 1, line))
                 duplicated_lines.append("Linea {}: '{}'".format(j + 1, lines[j]))
     return duplicated_lines
-
-
-#mancanza di chiarezza
-#coesione
-
 
 
