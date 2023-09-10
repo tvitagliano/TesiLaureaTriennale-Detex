@@ -1,8 +1,25 @@
 import inspect
 import difflib
 import ast
+import csv
 from radon.complexity import cc_visit
 MAX_COMPLEXITY=5
+
+
+def analyze_file_spaghetti(file_path, output_csv_file):
+    with open(file_path, 'r') as file:
+        code = file.read()
+    
+    tree = ast.parse(code)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            if spaghetti_code(node):
+                with open(output_csv_file, mode='a', newline='') as csv_file:
+                    writer = csv.writer(csv_file)
+                    if csv_file.tell() == 0:
+                        writer.writerow(['Method Name', 'File Path'])  # Scrivi l'intestazione solo se il file è vuoto
+                    writer.writerow([node.name, file_path])
+
 
 #complessità
 def spaghetti_code(node):
@@ -24,36 +41,25 @@ def calculate_complexity(node):
     return complexity
 
 
+#duplicati
+def has_duplicate_lines(node):
+    # Estrai il corpo del metodo
+    method_body = node.body
 
+    # Inizializza un insieme per tenere traccia delle righe viste
+    seen_lines = set()
 
-#identificazione di duplicati 
-#Viene utilizzata la libreria difflib per confrontare le linee di codice e calcolare la loro similarità.
-#Se la similarità supera una soglia specificata, verrà generato un avviso indicando che il metodo contiene codice duplicato, insieme alle linee duplicate individuate.
-def spaghetti_code_duplicato_threshold(max_similarity):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            source_code = inspect.getsource(func)
-            lines = source_code.split('\n')
-            duplicated_lines = find_duplicated_lines(lines, max_similarity)
-            
-            if duplicated_lines:
-                #generate_warning("Il metodo '{}' contiene codice duplicato.".format(func.__name__))
-                print("Linee duplicati:")
-                for line in duplicated_lines:
-                    print(line)
-                    
-            return func(*args, **kwargs)
-        return wrapper
-    return decorator
+    for stmt in method_body:
+        # Estrai la posizione di inizio (numero di riga) dell'istruzione
+        start_line = getattr(stmt, "lineno", None)
 
-def find_duplicated_lines(lines, max_similarity):
-    duplicated_lines = []
-    for i, line in enumerate(lines):
-        for j in range(i + 1, len(lines)):
-            similarity = difflib.SequenceMatcher(None, line, lines[j]).ratio()
-            if similarity >= max_similarity:
-                duplicated_lines.append("Linea {}: '{}'".format(i + 1, line))
-                duplicated_lines.append("Linea {}: '{}'".format(j + 1, lines[j]))
-    return duplicated_lines
+        if start_line is not None:
+            # Se hai già visto questa riga, hai trovato una linea duplicata
+            if start_line in seen_lines:
+                return True
 
+            # Aggiungi la riga all'insieme delle righe viste
+            seen_lines.add(start_line)
 
+    # Nessuna linea duplicata trovata
+    return False
