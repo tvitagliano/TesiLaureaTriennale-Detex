@@ -1,6 +1,4 @@
-import ast
 import os
-import csv
 from LongMethod import analyze_file_long
 from SpaghettiCode import analyze_file_spaghetti
 from BlobMethod import analyze_file_blob
@@ -14,6 +12,11 @@ def main(input_folder, output_folder):
         blob_csv = os.path.join(output_folder, 'Blob.csv')
         lazy_class_csv = os.path.join(output_folder, 'LazyClass.csv')
         
+        # Elimina i file CSV se esistono
+        for csv_file in [long_method_csv, spaghetti_code_csv, blob_csv, lazy_class_csv]:
+            if os.path.exists(csv_file):
+                os.remove(csv_file)
+        
         for file in files:
             if file.endswith('.py'):
                 file_path = os.path.join(root, file)
@@ -21,7 +24,7 @@ def main(input_folder, output_folder):
                 analyze_file_spaghetti(file_path, spaghetti_code_csv)
                 analyze_file_blob(file_path, blob_csv)
                 analyze_file_lazy_class(file_path, lazy_class_csv)
-        
+
 
 
 if __name__ == "__main__":

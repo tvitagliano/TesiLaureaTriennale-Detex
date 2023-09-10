@@ -13,7 +13,7 @@ def analyze_file_spaghetti(file_path, output_csv_file):
     tree = ast.parse(code)
     for node in ast.walk(tree):
         if isinstance(node, ast.FunctionDef):
-            if spaghetti_code(node):
+            if complexity_spaghetti_code(node):
                 with open(output_csv_file, mode='a', newline='') as csv_file:
                     writer = csv.writer(csv_file)
                     if csv_file.tell() == 0:
@@ -22,7 +22,7 @@ def analyze_file_spaghetti(file_path, output_csv_file):
 
 
 #complessità
-def spaghetti_code(node):
+def complexity_spaghetti_code(node):
     method_complexity = calculate_complexity(node)  # Sostituisci questa funzione con il calcolo di complessità reale
             
     # Definisci il criterio per un metodo complesso
